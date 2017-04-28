@@ -111,8 +111,8 @@ function run(app, passport, userModel){
 
     //Обработаем форму профиля пользователя
     app.post('/editProfile', function (req, res) {
-        req.check('fName', "Fname is invalid").isLength({min: 2});
-        req.check('lName', "Lname is invalid").isLength({min: 2});
+        if (req.body.fName != "") { req.check('fName', "Fname is invalid").isLength({min: 2}) }
+        if (req.body.lName != "") { req.check('lName', "Lname is invalid").isLength({min: 2}) }
         req.check('email', "Invalid email address").notEmpty().withMessage('Email is required').isEmail();
         if (req.body.password != "") {
             var passwdRegexp = /^(?=.*\d)(?=.*\W)(?=.*[a-z])(?=.*[A-Z])[A-Za-z\d\W]{8,}$/;

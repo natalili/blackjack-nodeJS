@@ -3,10 +3,7 @@ $(document).ready(function () {
 
     $("#formProfile").on('submit', function(event) {
         event.preventDefault();
-        //var form = $(this);
-        //console.log( $(this).serialize() );
         bj.validations.isCorrectProfileData( function () {
-       //     $.post('/editProfile', form.serialize())
         });
     });
 

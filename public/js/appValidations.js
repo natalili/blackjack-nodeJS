@@ -28,28 +28,28 @@
         var msg = 'Пароль должен иметь хотя бы одну маленькую, одну большую букву, цифру и специальный символ!';
         if (!validator.matches(val, passwdRegexp)) messageArr.push(msg);
         if (callback) callback(messageArr);
-        if (messageArr.length == 0) return true;
+        return (messageArr.length == 0) ? true : false;
     }
 
     function checkConfirmPasswordForSave(val, confirmVal, callback) {
         var messageArr = [];
         if (!validator.equals(val, confirmVal)) messageArr.push('Пароль должен совпадать с подтверждением!');
         if (callback) callback(messageArr);
-        if (messageArr.length == 0) return true;
+        return (messageArr.length == 0) ? true : false;
     }
 
     function checkFNameForSave(val, callback) {
         var messageArr = [];
         if (!validator.isLength(val, {min:2})) messageArr.push('FName должен иметь не менее 2 символов!');
         if (callback) callback(messageArr);
-        if (messageArr.length == 0) return true;
+        return (messageArr.length == 0) ? true : false;
     }
 
     function checkLNameForSave(val, callback) {
         var messageArr = [];
         if (!validator.isLength(val, {min:2})) messageArr.push('LName должен иметь не менее 2 символов!');
         if (callback) callback(messageArr);
-        if (messageArr.length == 0) return true;
+        return (messageArr.length == 0) ? true : false;
     }
 
     function checkEmailForLogin(val, callback) {
@@ -60,13 +60,14 @@
         });
     }
 
-    function checkPasswordForLogin(val, emailVal, callback) {
-        var messageArr = [];
-        isCorrectPassword(val, emailVal, function (res) {
-            if (!res) messageArr.push('Не соответствие пароля и email!');
-            if (callback) callback(messageArr);
-        });
-    }
+//Так как пароль можно и подобрать через такую функцию, отменим эту проверку
+    // function checkPasswordForLogin(val, emailVal, callback) {
+    //     var messageArr = [];
+    //     isCorrectPassword(val, emailVal, function (res) {
+    //         if (!res) messageArr.push('Не соответствие пароля и email!');
+    //         if (callback) callback(messageArr);
+    //     });
+    // }
 
     function isCorrectSignupData() {
         var form = $("#formSignup"),
@@ -95,21 +96,22 @@
             password = $('#formLogin [name="password"]').val();
         checkEmailForLogin(email, function (messageArr) {
             if (messageArr.length == 0) {
-                checkPasswordForLogin(password, email, function (messageArr) {
-                    if (messageArr.length == 0) {
+                // checkPasswordForLogin(password, email, function (messageArr) {
+                //     if (messageArr.length == 0) {
                         form.off('submit');
                         form.on('submit', function() {
                             bj.validations.isCorrectLoginData();
                         });
-                    } else {
-                        form.off('submit');
-                        form.on('submit', function(event) {
-                            event.preventDefault();
-                            bj.validations.isCorrectLoginData();
-                        });
-                    }
-                })
+                //     } else {
+                //         form.off('submit');
+                //         form.on('submit', function(event) {
+                //             event.preventDefault();
+                //             bj.validations.isCorrectLoginData();
+                //         });
+                //     }
+                // })
             } else {
+                form.off('submit');
                 form.on('submit', function(event) {
                     event.preventDefault();
                     bj.validations.isCorrectLoginData();
@@ -127,20 +129,27 @@
             lName = $('#formProfile [name="lName"]').val();
 
         var checkPassword,
-            checkNames;
+            checkNames,
+            checkFName,
+            checkLName;
         if (password != '') {
             checkPassword = checkPasswordForSave(password) && checkConfirmPasswordForSave(confirmPassword, password);
         } else { checkPassword = true }
-        checkNames =  checkFNameForSave(fName) && checkLNameForSave(lName);
+
+        checkFName = (fName == '') ? true : checkFNameForSave(fName);
+        checkLName = (lName == '') ? true : checkLNameForSave(lName);
+        checkNames =  checkFName && checkLName;
 
         checkNewEmailForSave(email, function (messageArr) {
             if (messageArr.length == 0 && checkPassword && checkNames) {
+                console.log('forma ok');
                 if (callback) callback();
                 form.off('submit');
                 form.on('submit', function () {
                     bj.validations.isCorrectProfileData();
                 })
             } else {
+                console.log('forma invalid');
                 form.off('submit');
                 form.on('submit', function(event) {
                     event.preventDefault();
@@ -178,7 +187,7 @@
         "checkFNameForSave" : checkFNameForSave,
         "checkLNameForSave" : checkLNameForSave,
         "checkEmailForLogin" : checkEmailForLogin,
-        "checkPasswordForLogin" : checkPasswordForLogin,
+     //   "checkPasswordForLogin" : checkPasswordForLogin,
         "isCorrectLoginData" : isCorrectLoginData,
         "isCorrectSignupData" : isCorrectSignupData,
         "isCorrectProfileData" : isCorrectProfileData

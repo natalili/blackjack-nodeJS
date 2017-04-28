@@ -29,20 +29,21 @@ $(document).ready(function () {
         })
     });
 
-    $("#formLogin").on('blur', '[name="password"]', function () {
-        var val = $(this).val(),
-            emailVal = $("#formLogin").children().children('[name="email"]').val(),
-            elm = $(this).parent();
+//Так как пароль можно и подобрать через такую функцию, отменим эту проверку
+    // $("#formLogin").on('blur', '[name="password"]', function () {
+    //     var val = $(this).val(),
+    //         emailVal = $("#formLogin").children().children('[name="email"]').val(),
+    //         elm = $(this).parent();
 
-        bj.validations.checkPasswordForLogin(val, emailVal, function (messageArr) {
-            bj.showMessage(('emailErr'), messageArr);
-            if (messageArr.length > 0) {
-                bj.addErrorDecoration(elm);
-            } else {
-                bj.validations.isCorrectLoginData();
-            }
-        })
-    });
+    //     bj.validations.checkPasswordForLogin(val, emailVal, function (messageArr) {
+    //         bj.showMessage(('emailErr'), messageArr);
+    //         if (messageArr.length > 0) {
+    //             bj.addErrorDecoration(elm);
+    //         } else {
+    //             bj.validations.isCorrectLoginData();
+    //         }
+    //     })
+    // });
 
 
     $("#formSignup").on('submit', function(event) {

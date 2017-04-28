@@ -66,7 +66,7 @@ module.exports = function(io, Table) {
 
         //При обрыве соединения:
         socket.on('disconnect', function () {
-            if (socket.request.session.user) {
+            if (socket.request.session.user && socket.request.session.table) {
                 var userId = socket.request.session.user._id,
                     table = socket.request.session.table,
                     room = 'table-' + table._id;
