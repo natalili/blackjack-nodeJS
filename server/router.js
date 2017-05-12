@@ -14,6 +14,7 @@ function run(app, passport, userModel){
 	app.get("/", function(req, res){
 	    dataToTemplate.page = "main";
 	    dataToTemplate.message = req.flash('loginMessage').concat(req.flash('signupMessage'));// не красиво
+        if dataToTemplate.auth dataToTemplate.user = req.user;
 		res.render('template', dataToTemplate );
 	});
 
@@ -21,12 +22,14 @@ function run(app, passport, userModel){
 	app.get("/about", function(req, res){
 	    dataToTemplate.page = "about";
 	    dataToTemplate.message = "";
+        if dataToTemplate.auth dataToTemplate.user = req.user;
 		res.render('template', dataToTemplate );
 	});
 
 	//Отображаем страницу игры для зарегестрированного пользователя
     app.get("/game", isLoggedIn, function(req, res){
         dataToTemplate.page = "game";
+        dataToTemplate.user = req.user;
         res.render('template', dataToTemplate );
     });
 

@@ -6,19 +6,25 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand" href="#">BlackJack</a>
+			<a class="navbar-brand brand-font" href="#">BlackJack</a>
 		</div>
 		<div class="collapse navbar-collapse" id="myNavbar">
 			<ul class="nav navbar-nav">
-				<li><a href="/">MAIN</a></li>
-				<li><a href="/about">ABOUT</a></li>
-				<li class="btn btn-warning navbar-btn"><a href="/game">GAME</a></li>
+				<% if (page == 'main') { %><li class='open'><% } else { %><li><% } %><a href="/">MAIN</a></li>
+				<% if (page == 'about') { %><li class='open'><% } else { %><li><% } %><a href="/about">ABOUT</a></li>
+				<!--Отображаем для авторизированного пользователя profile, logout-->
+				<% if (auth == true) { %>
+					<% if (page == 'game') { %><li class='brand-font open'><% } else { %><li class="brand-font"><% } %><a href="/game">Game</a></li>
+				<% } %>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<!--Отображаем для авторизированного пользователя profile, logout-->
 				<% if (auth == true) { %>
-					<li><a href="/profile"><span class="glyphicon glyphicon-user"></span>PROFILE</a></li>
+					<li><p class="navbar-text"><%= user.local.email %></p></li>
+					<% if (page == 'profile') { %><li class='open'><% } else { %><li><% } %><a href="/profile"><span class="glyphicon glyphicon-user"></span>PROFILE</a></li>
 					<li><a href="/logout">LOGOUT<span class="glyphicon glyphicon-log-out"></span></a></li>
+				<% } else { %>
+					<li><p class="navbar-text">Вход не выполнен</p></li>
 				<% } %>
 
 				<!--Отображаем для не авторизированного пользователя signup, login-->

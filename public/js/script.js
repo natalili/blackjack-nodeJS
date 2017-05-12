@@ -1,6 +1,8 @@
 console.log("client script");
 $(document).ready(function () {
 
+    $('#menuSignup').parent().hide(); 
+
     $('#linkLogin').on('click', function (event) {
         bj.goToMenu('#menuLogin', event, this);
     });
