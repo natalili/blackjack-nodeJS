@@ -1,11 +1,13 @@
 console.log("client script profile.js");
 $(document).ready(function () {
 
-    $("#formProfile").on('submit', function(event) {
-        event.preventDefault();
-        bj.validations.isCorrectProfileData( function () {
-        });
-    });
+ //Так как приходиться дважды кликнуть, чтоб просабмитилась форма, временно отключаю эту проверку/блокировку. 
+//В перспективе переделать на ajax и вернуть проверку/блокировку.
+   // $("#formProfile").on('submit', function(event) {
+   //      event.preventDefault();
+   //      bj.validations.isCorrectProfileData( function () {
+   //      });
+   //  });
 
     $("#formProfile").on('blur', '[name="fName"]', function () {
         var val = $(this).val(),

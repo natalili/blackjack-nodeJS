@@ -11,11 +11,12 @@ $(document).ready(function () {
         bj.goToMenu('#menuSignup', event, this);
     });
 
-
-    $("#formLogin").on('submit', function(event) {
-        event.preventDefault();
-        bj.validations.isCorrectLoginData();
-    });
+//Так как приходиться дважды кликнуть, чтоб просабмитилась форма, временно отключаю эту проверку/блокировку. 
+//В перспективе переделать на ajax и вернуть проверку/блокировку.
+    // $("#formLogin").on('submit', function(event) {
+    //     event.preventDefault();
+    //     bj.validations.isCorrectLoginData();
+    // });
 
     $("#formLogin").on('blur', '[name="email"]', function () {
         var val = $(this).val(),
@@ -47,11 +48,12 @@ $(document).ready(function () {
     //     })
     // });
 
-
-    $("#formSignup").on('submit', function(event) {
-        event.preventDefault();
-        bj.validations.isCorrectSignupData();
-    });
+//Так как приходиться дважды кликнуть, чтоб просабмитилась форма, временно отключаю эту проверку/блокировку. 
+//В перспективе переделать на ajax и вернуть проверку/блокировку.
+    // $("#formSignup").on('submit', function(event) {
+    //     event.preventDefault();
+    //     bj.validations.isCorrectSignupData();
+    // });
 
     $("#formSignup").on('blur', '[name="email"]', function () {
         var val = $(this).val(),

@@ -173,11 +173,13 @@
         )
     }
 
-    function isCorrectPassword(val, emailVal, callback) {
-        $.post(('/checkPassword?email=' + emailVal + '&pass=' + val), function (data) {
-            callback(data)
-        })
-    }
+
+//Так как пароль можно и подобрать через такую функцию, отменим эту проверку
+    // function isCorrectPassword(val, emailVal, callback) {
+    //     $.post(('/checkPassword?email=' + emailVal + '&pass=' + val), function (data) {
+    //         callback(data)
+    //     })
+    // }
 
     var export_my = {
         "checkEmailForSave" : checkEmailForSave,

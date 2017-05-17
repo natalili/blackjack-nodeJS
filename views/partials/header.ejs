@@ -6,15 +6,15 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</button>
-			<a class="navbar-brand brand-font" href="#">BlackJack</a>
+			<a class="navbar-brand brand-font" href="/">БлекДжек</a>
 		</div>
 		<div class="collapse navbar-collapse" id="myNavbar">
 			<ul class="nav navbar-nav">
-				<% if (page == 'main') { %><li class='open'><% } else { %><li><% } %><a href="/">MAIN</a></li>
-				<% if (page == 'about') { %><li class='open'><% } else { %><li><% } %><a href="/about">ABOUT</a></li>
+				<% if (page == 'about-app') { %><li class='open'><% } else { %><li><% } %><a href="/about-app">О приложении</a></li>
+				<% if (page == 'about-game') { %><li class='open'><% } else { %><li><% } %><a href="/about-game">Об игре</a></li>
 				<!--Отображаем для авторизированного пользователя profile, logout-->
 				<% if (auth == true) { %>
-					<% if (page == 'game') { %><li class='brand-font open'><% } else { %><li class="brand-font"><% } %><a href="/game">Game</a></li>
+					<% if (page == 'game') { %><li class='brand-font open'><% } else { %><li class="brand-font"><% } %><a href="/game">Игра</a></li>
 				<% } %>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
@@ -22,14 +22,14 @@
 				<% if (auth == true) { %>
 					<li><p class="navbar-text"><%= user.local.email %></p></li>
 					<% if (page == 'profile') { %><li class='open'><% } else { %><li><% } %><a href="/profile"><span class="glyphicon glyphicon-user"></span>PROFILE</a></li>
-					<li><a href="/logout">LOGOUT<span class="glyphicon glyphicon-log-out"></span></a></li>
+					<li><a href="/logout">Выйти<span class="glyphicon glyphicon-log-out"></span></a></li>
 				<% } else { %>
 					<li><p class="navbar-text">Вход не выполнен</p></li>
 				<% } %>
 
 				<!--Отображаем для не авторизированного пользователя signup, login-->
                 <% if (auth == false) { %>
-					<li class="dropdown"><a id="menuSignup" class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-user"></span>SIGNUP</a>
+					<li class="dropdown"><a id="menuSignup" class="dropdown-toggle" data-toggle="dropdown" href="#"><span class="glyphicon glyphicon-user"></span>Зарегистрироваться</a>
 						<!--style="display: none;" добавить в стили или скрипты-->
 						<div class="dropdown-menu">
 
@@ -54,7 +54,7 @@
 							<p>Already have an account? <a id="linkLogin" href="#">Login</a></p>
 						</div>
 					</li>
-					<li class="dropdown"><a id="menuLogin" class="dropdown-toggle" data-toggle="dropdown" href="#">LOGIN<span class="glyphicon glyphicon-log-in"></span></a>
+					<li class="dropdown"><a id="menuLogin" class="dropdown-toggle" data-toggle="dropdown" href="#">Войти<span class="glyphicon glyphicon-log-in"></span></a>
 						<div class="dropdown-menu">
 
 							<form action="/login" method="post" id="formLogin" class="form container-fluid">

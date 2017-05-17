@@ -93,6 +93,7 @@ tableSchema.methods.setToZeroBet = function (userId) {
     this.players[ind].bet = 0;
 };
 
+//при победе ставка умножается на 1.5
 tableSchema.methods.uppedBet = function (userId) {
     var ind = this.players.findIndex(function(i){
         if (i['player'].equals(userId)) {

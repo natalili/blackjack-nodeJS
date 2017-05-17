@@ -19,23 +19,33 @@ function run(app, passport, userModel){
 	});
 
     //Отображаем /about
-	app.get("/about", function(req, res){
-	    dataToTemplate.page = "about";
-	    dataToTemplate.message = "";
+    app.get("/about-app", function(req, res){
+        dataToTemplate.page = "about-app";
+        dataToTemplate.message = "";
         if (dataToTemplate.auth == true) dataToTemplate.user = req.user;
-		res.render('template', dataToTemplate );
-	});
+        res.render('template', dataToTemplate );
+    });
+
+    //Отображаем /about
+    app.get("/about-game", function(req, res){
+        dataToTemplate.page = "about-game";
+        dataToTemplate.message = "";
+        if (dataToTemplate.auth == true) dataToTemplate.user = req.user;
+        res.render('template', dataToTemplate );
+    });
 
 	//Отображаем страницу игры для зарегестрированного пользователя
     app.get("/game", isLoggedIn, function(req, res){
+        req.session.user = req.user; // для socket
         dataToTemplate.page = "game";
+        dataToTemplate.message = "";
         dataToTemplate.user = req.user;
         res.render('template', dataToTemplate );
     });
 
     //Обработаем форму входа
     app.post('/login', passport.authenticate('local-login', {
-        successRedirect : '/profile', // redirect to the secure profile section
+        successRedirect : '/game', // redirect to the secure profile section
         failureRedirect : '/', // redirect back to the main page if there is an error
         failureFlash : true // allow flash messages
     }));
@@ -71,22 +81,24 @@ function run(app, passport, userModel){
         }
     });
 
-    app.post('/checkPassword', function (req, res) {
-        var pass = req.query.pass;
-        userModel.findOne({ 'local.email' : req.query.email }, function (req, user) {
-            if ( user && user.validPassword(pass)) {
-                res.send(true)
-            } else {
-                res.send(false)
-            }
-        })
-    });
+ //Так как пароль можно и подобрать через такую функцию, отменим эту проверку
+   // app.post('/checkPassword', function (req, res) {
+    //     var pass = req.query.pass;
+    //     userModel.findOne({ 'local.email' : req.query.email }, function (req, user) {
+    //         if ( user && user.validPassword(pass)) {
+    //             res.send(true)
+    //         } else {
+    //             res.send(false)
+    //         }
+    //     })
+    // });
 
     //Отображаем профиль пользователя для зарегестрированного пользователя
     app.get('/profile', isLoggedIn, function(req, res) {
-        req.session.user = req.user; // для socket
+        // req.session.user = req.user; // для socket
         dataToTemplate.page = "profile";
         dataToTemplate.message = req.flash('profileMessage');
+        console.log(dataToTemplate.message);
         dataToTemplate.user = req.user;
         res.render('template', dataToTemplate);
     });
@@ -117,7 +129,7 @@ function run(app, passport, userModel){
         if (req.body.fName != "") { req.check('fName', "Fname is invalid").isLength({min: 2}) }
         if (req.body.lName != "") { req.check('lName', "Lname is invalid").isLength({min: 2}) }
         req.check('email', "Invalid email address").notEmpty().withMessage('Email is required').isEmail();
-        if (req.body.password != "") {
+        if (req.body.password != "" && !req.user.validPassword(req.body.password)) {
             var passwdRegexp = /^(?=.*\d)(?=.*\W)(?=.*[a-z])(?=.*[A-Z])[A-Za-z\d\W]{8,}$/;
             req.check('password', 'Invalid password').matches(passwdRegexp).equals(req.body.confirmPassword);
         }
@@ -132,7 +144,7 @@ function run(app, passport, userModel){
                 user.local.fName = formData.fName;
                 user.local.lName = formData.lName;
                 user.local.email = formData.email;
-                if (formData.password != "") user.local.password = user.local.generateHash(formData.password);
+                if (formData.password != "" && !user.validPassword(formData.password)) user.local.password = user.local.generateHash(formData.password);
 
                 //upload avatar files
                 if (formFiles.avatarFile) {
@@ -155,6 +167,7 @@ function run(app, passport, userModel){
                     }
                 })
             });
+            req.flash('profileMessage', 'Profile data is saved!');
         }
         res.redirect('/profile')
 
@@ -182,7 +195,7 @@ function run(app, passport, userModel){
 	})
 }
 
-//Валидация для резистрации
+//Валидация для регистрации
 function isValidFormsData(req, res, next) {
 
     //check email

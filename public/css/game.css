@@ -1,7 +1,3 @@
-#startGame {
-    display: none;
-}
-
 .card {
     background-image: url("/img/cards.png");
     height: 123px;
@@ -241,8 +237,9 @@
 }
 
 #startGame {
+    display: none;
     position: absolute;
-    top: 20px;
+    bottom: 15px;
     left: 41%;
 }
 
