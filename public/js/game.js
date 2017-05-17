@@ -239,15 +239,15 @@ function bet(bet) {
     timerForBit = '';
 }
 
-//Для хода отображаем "Взять карту" и "Пасс", высвечиваем сообщение с таймером.
-//если таймер вышел, то авто пасс, скрываем кнопки и сообщения
+//Для хода отображаем "Взять карту" и "Пас", высвечиваем сообщение с таймером.
+//если таймер вышел, то авто пас, скрываем кнопки и сообщения
 socket.on("yourMove", function () {
     $('#dialog').show();
     $("#messageBox").html('Ваш ход.').attr("class", "alert alert-info").show();
     var countDownMove = сountDown();
     timerForMove = setInterval(function () {
         var seconds = countDownMove();
-        var msg = "Ваш ход. При отсутствии хода автоматический 'пасс' через " + seconds + " сек.";
+        var msg = "Ваш ход. При отсутствии хода автоматический 'пас' через " + seconds + " сек.";
         $("#messageBox").html(msg);
         if (seconds == 0) {
             clearInterval(timerForMove);
@@ -259,7 +259,7 @@ socket.on("yourMove", function () {
     }, 1000);
 });
 
-//если переход хода по инициативе сервера скрываем  "Взять карту" и "Пасс"
+//если переход хода по инициативе сервера скрываем  "Взять карту" и "Пас"
 socket.on("hideDialog", function () {
     $('#dialog').hide();
 });
@@ -273,7 +273,7 @@ $("#getCard").on('click', function () {
 
 });
 
-//пасс, очищаем таймер, скрываем сообщения
+//пас, очищаем таймер, скрываем сообщения
 $('#stand').on('click', function () {
     socket.emit('continueGame');
     $('#dialog').hide();
