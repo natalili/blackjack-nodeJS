@@ -98,7 +98,6 @@ function run(app, passport, userModel){
         // req.session.user = req.user; // для socket
         dataToTemplate.page = "profile";
         dataToTemplate.message = req.flash('profileMessage');
-        console.log(dataToTemplate.message);
         dataToTemplate.user = req.user;
         res.render('template', dataToTemplate);
     });
