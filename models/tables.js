@@ -64,6 +64,15 @@ tableSchema.methods.setCroupierPoints = function () {
     this.croupier.points = calculatePoints(this.croupier.hand);
 };
 
+tableSchema.methods.canSetBet = function (bet, userId) {
+    var ind = this.players.findIndex(function(i){
+        if (i['player'].equals(userId)) {
+            return true
+        }
+    });
+    return (this.players[ind].balance >= bet);
+};
+
 tableSchema.methods.setBet = function (bet, userId) {
     var ind = this.players.findIndex(function(i){
         if (i['player'].equals(userId)) {
@@ -93,14 +102,14 @@ tableSchema.methods.setToZeroBet = function (userId) {
     this.players[ind].bet = 0;
 };
 
-//при победе ставка умножается на 1.5
+//при победе ставка умножается на 2
 tableSchema.methods.uppedBet = function (userId) {
     var ind = this.players.findIndex(function(i){
         if (i['player'].equals(userId)) {
             return true
         }
     });
-    this.players[ind].bet = this.players[ind].bet * 1.5;
+    this.players[ind].bet = this.players[ind].bet * 2;
 };
 
 tableSchema.methods.getPlayerBalance = function (userId) {

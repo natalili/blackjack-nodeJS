@@ -24,12 +24,19 @@ module.exports = function(io, Table, userModel) {
                     table = socket.request.session.table,
                     room = 'table-' + table._id;
                 Table.findById(table._id, function (req, table) {
-                    table.setBet(data.bet, userId);
-                    table.save(function () {
-                        socket.emit("showBalance", {playerBalance: table.getPlayerBalance(userId)});
-                        io.sockets.in(room).emit("showPlayers", table.players);
-                        acceptBets(socket);
-                    });
+                    if (table.canSetBet(data.bet, userId)) {
+                        table.setBet(data.bet, userId);
+                        table.save(function () {
+                            socket.emit("showBalance", {playerBalance: table.getPlayerBalance(userId)});
+                            io.sockets.in(room).emit("showPlayers", table.players);
+                            acceptBets(socket);
+                        });                        
+                    } else {
+                        socket.emit("showMessage", "Нет достаточно средств!");
+                        setTimeout(function () {
+                            socket.emit("yourBet");  
+                        }, 2050);
+                    }
                 });
             }
         });

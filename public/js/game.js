@@ -178,7 +178,6 @@ function doQuitGame() {
     }
     $("#messageBox").hide();
     socket.emit("quitGame");
-    console.log("quit game");
 }
 
 //после выполнения выхода на сервере переходим в lobby
@@ -305,11 +304,6 @@ socket.on("hideActivePlayer", function (data) {
     }
 });
 
-window.onbeforeunload = function() {
-  return "Будет выполнен выход из игры. Точно перейти?";
-};
-
-window.onunload = function() {
-    alert("При переходе на другую страницу будет выполнен выход из игры!");
+$(window).on("unload", function(){ 
     doQuitGame();
-};
+});
