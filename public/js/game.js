@@ -159,7 +159,9 @@ $("#startGame").on('click', function () {
 });
 
 //при выходе из игры очищаются запущенные интервалы сообщений, скрываются сообщения
-$("#quitGame").on('click', function () {
+$("#quitGame").on('click', doQuitGame);
+
+function doQuitGame() {
     if (timerForBit) {
         clearInterval(timerForBit);
         socket.emit("acceptBets");
@@ -176,7 +178,8 @@ $("#quitGame").on('click', function () {
     }
     $("#messageBox").hide();
     socket.emit("quitGame");
-});
+    console.log("quit game");
+}
 
 //после выполнения выхода на сервере переходим в lobby
 socket.on("quitGame", function () {
@@ -301,3 +304,12 @@ socket.on("hideActivePlayer", function (data) {
         elm.removeClass('activePlayer');
     }
 });
+
+window.onbeforeunload = function() {
+  return "Будет выполнен выход из игры. Точно перейти?";
+};
+
+window.onunload = function() {
+    alert("При переходе на другую страницу будет выполнен выход из игры!");
+    doQuitGame();
+};
