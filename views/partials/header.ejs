@@ -21,7 +21,7 @@
 				<!--Отображаем для авторизированного пользователя profile, logout-->
 				<% if (auth == true) { %>
 					<li><p class="navbar-text"><%= user.local.email %></p></li>
-					<% if (page == 'profile') { %><li class='open'><% } else { %><li><% } %><a href="/profile"><span class="glyphicon glyphicon-user"></span>PROFILE</a></li>
+					<% if (page == 'profile') { %><li class='open'><% } else { %><li><% } %><a href="/profile"><span class="glyphicon glyphicon-user"></span>Профиль</a></li>
 					<li><a href="/logout">Выйти<span class="glyphicon glyphicon-log-out"></span></a></li>
 				<% } else { %>
 					<li><p class="navbar-text">Вход не выполнен</p></li>

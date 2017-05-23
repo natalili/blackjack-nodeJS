@@ -32,7 +32,7 @@ module.exports = function(io, Table, userModel) {
                             acceptBets(socket);
                         });                        
                     } else {
-                        socket.emit("showMessage", "Нет достаточно средств!");
+                        socket.emit("showMessage", "Нет достаточно средств! Пополнить баланс можно в профиле");
                         setTimeout(function () {
                             socket.emit("yourBet");  
                         }, 2050);
@@ -45,10 +45,6 @@ module.exports = function(io, Table, userModel) {
         socket.on('acceptBets', function () {
             acceptBets(socket);
         });
-
-        // socket.on('getCardsToEach', function () {
-        //     getCardsToEach(socket);
-        // });
 
         //берем дополнительную карту, если есть карты в колоде, если перебор или блекджек сразу переход хода,
         // иначе запрашиваем следующий ход
@@ -94,13 +90,18 @@ module.exports = function(io, Table, userModel) {
 
         //выход из игры
         socket.on("quitGame", function() {
-            doQuitGame(socket);
+            doQuitGame(socket, function(){
+                socket.emit("quitGame");
+                socket.leave('table-' + socket.request.session.table);
+                socket.join('lobby');
+                socket.request.session.table = '';
+            });
         });
 
         //при обрыве соединения
         socket.on("disconnect", function () {
             console.log("socket " + socket.id + " disconnected");
-            if (socket.request.session.user && socket.request.session.table) doQuitGame(socket);
+            if (socket.request.session.user) doQuitGame(socket);
         });
     });
 
@@ -165,30 +166,31 @@ module.exports = function(io, Table, userModel) {
     //убирается отметка об игре за столом у пользователя в User и возвращается его баланс и Table в User
     //рассылается обновленный перечень столов в lobby, пользователь переходи из table в lobby,
     //отсылается обновленный список игроков для покинутого стола.
-    function doQuitGame(socket) {
-        if (socket.request.session.table) {
-            var user = socket.request.session.user,
-                table = socket.request.session.table,
-                room = 'table-' + table._id;
-            Table.findById(table._id, function (req, table) {
-                if (table) {
-                    table.quitPlayer(user._id, function (balance) {
-                        userModel.findById(user._id, function (req, user) {
-                            user.resetGameTableId(table._id);
-                            // user.save();
-                            user.updateBalance(balance);
-                            user.save();
-                        });
-                        Table.findActiveTables(function (req, tables) { //тут стол не обновляеться при выходе не последнего
-                            // пользователя, а в базе данные обновляються.
-                            io.sockets.in('lobby').emit("showTables", tables);
-                        });
-                        socket.emit("quitGame");
-                        socket.leave(room);
-                        socket.join('lobby');
-                        io.sockets.in(room).emit("showPlayers", table.players);
-                        socket.request.session.table = '';
+    function doQuitGame(socket, callback) {
+        if (socket.request.session.user) {
+            userModel.findById(socket.request.session.user._id, function (req, user) {
+                if (user.local.gameTableId) {
+                    var tableId = user.local.gameTableId;
+                        room = 'table-' + tableId;
+                    Table.findById(tableId, function (req, table) {
+                        if (table) {
+                            table.quitPlayer(user._id, function (balance) {
+
+                                user.updateBalance(balance);
+                                user.save();
+                               
+                                Table.findActiveTables(function (req, tables) { //тут стол не обновляеться при выходе не последнего
+                                    // пользователя, а в базе данные обновляються.
+                                    io.sockets.in('lobby').emit("showTables", tables);
+                                });
+                                io.sockets.in(room).emit("showPlayers", table.players);
+
+                                if (callback) callback();
+                            });
+                        }
                     });
+                    user.resetGameTableId();
+                    user.save();                    
                 }
             });
         }

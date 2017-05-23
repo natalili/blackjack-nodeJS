@@ -303,7 +303,3 @@ socket.on("hideActivePlayer", function (data) {
         elm.removeClass('activePlayer');
     }
 });
-
-$(window).on("unload", function(){ 
-    doQuitGame();
-});

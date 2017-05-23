@@ -21,8 +21,9 @@ module.exports = function (io, Table, userModel) {
                 room = 'table-' + table._id;
             userModel.findById(userId, function (req, user) {
                 if (user.local.gameTableId) {
-                    socket.emit("showMessageForGame", "Можно играть только за одним столом.");
-                } else {
+                //    socket.emit("showMessageForGame", "Можно играть только за одним столом.");
+                } 
+                //else {
                     user.setGameTableId(table._id);
                     user.save();
                     table.addPlayer(user, socket.id);
@@ -40,7 +41,7 @@ module.exports = function (io, Table, userModel) {
                         socket.emit('newUser', table.players[0].fullName);
                         socket.emit("showNick", table.players);
                     });
-                }
+                //}
             });
         });
 
@@ -53,10 +54,9 @@ module.exports = function (io, Table, userModel) {
                 var userId = socket.request.session.user._id;
                 Table.findById(data.tableId, function (req, table) {
                     userModel.findById(userId, function (req, user) {
-                        if (user.local.gameTableId) {
+                        if (user.local.gameTableId == table._id) {
                             socket.emit("showMessageForGame", "Можно играть только за одним столом.");
                         } else {
-                            console.log(user.local.gameTableId);
                             user.setGameTableId(table._id);
                             user.save();
                             if (table) {

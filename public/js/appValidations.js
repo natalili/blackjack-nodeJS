@@ -24,9 +24,10 @@
         var messageArr = [];
         if (validator.isEmpty(val)) messageArr.push('Пароль не может быть пустым!');
         if (!validator.isLength(val, {min:8})) messageArr.push('Пароль должен иметь не менее 8 символов!');
-        var passwdRegexp = /^(?=.*\d)(?=.*\W)(?=.*[a-z])(?=.*[A-Z])[A-Za-z\d\W]{8,}$/;
-        var msg = 'Пароль должен иметь хотя бы одну маленькую, одну большую букву, цифру и специальный символ!';
-        if (!validator.matches(val, passwdRegexp)) messageArr.push(msg);
+        // проверить Regexp. Не пропускает _
+        // var passwdRegexp = /^(?=.*\d)(?=.*\W)(?=.*[a-z])(?=.*[A-Z])[A-Za-z\d\W]{8,}$/;
+        // var msg = 'Пароль должен иметь хотя бы одну маленькую, одну большую букву, цифру и специальный символ!';
+        // if (!validator.matches(val, passwdRegexp)) messageArr.push(msg);
         if (callback) callback(messageArr);
         return (messageArr.length == 0) ? true : false;
     }

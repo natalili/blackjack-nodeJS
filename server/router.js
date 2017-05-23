@@ -129,8 +129,10 @@ function run(app, passport, userModel){
         if (req.body.lName != "") { req.check('lName', "Lname is invalid").isLength({min: 2}) }
         req.check('email', "Invalid email address").notEmpty().withMessage('Email is required').isEmail();
         if (req.body.password != "" && !req.user.validPassword(req.body.password)) {
-            var passwdRegexp = /^(?=.*\d)(?=.*\W)(?=.*[a-z])(?=.*[A-Z])[A-Za-z\d\W]{8,}$/;
-            req.check('password', 'Invalid password').matches(passwdRegexp).equals(req.body.confirmPassword);
+            // var passwdRegexp = /^(?=.*\d)(?=.*\W)(?=.*[a-z])(?=.*[A-Z])[A-Za-z\d\W]{8,}$/;
+            // req.check('password', 'Invalid password').matches(passwdRegexp).equals(req.body.confirmPassword);
+            // оставим проверку по длине, остальное нужно перевести на информационные сообщения
+            req.check('password', 'Invalid passwords length').isLength({min: 8}).equals(req.body.confirmPassword);
         }
         if (req.validationErrors()) {
             req.flash('profileMessage', req.validationErrors());
@@ -201,9 +203,11 @@ function isValidFormsData(req, res, next) {
     req.check('email', "Invalid email address").notEmpty().withMessage('Email is required').isEmail();
 
     //check password
-    var passwdRegexp = /^(?=.*\d)(?=.*\W)(?=.*[a-z])(?=.*[A-Z])[A-Za-z\d\W]{8,}$/;
+    //var passwdRegexp = /^(?=.*\d)(?=.*\W)(?=.*[a-z])(?=.*[A-Z])[A-Za-z\d\W]{8,}$/;
+    //req.check('password', 'Invalid password').matches(passwdRegexp);
+    // оставим проверку по длине, остальное нужно перевести на информационные сообщения
+    req.check('password', 'Invalid passwords length').isLength({min: 8});
     req.check('password', 'Password is required').notEmpty();
-    req.check('password', 'Invalid password').matches(passwdRegexp);
     req.check('password', 'Confirm password not equals password').equals(req.body.confirmPassword);
 
     if (!req.validationErrors())
